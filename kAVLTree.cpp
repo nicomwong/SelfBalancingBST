@@ -3,6 +3,7 @@
 #include "kAVLTree.h"
 
 #include <iostream>
+#include <string>
 
 // Constructs a k-AVLTree with parameter k
 kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
@@ -43,6 +44,18 @@ void kAVLTree::printSearch(int whole, int frac)
     
     // Now, n == nullptr, so the node is not in the tree
     std::cout << nv << " not found" << std::endl;
+}
+
+// Prints the node values in-order
+void kAVLTree::printInOrder()
+{
+    if (root == nullptr)
+    {   // Tree is empty, so print nothing
+        return;
+    }
+
+    const std::string output = printInOrderRecurs(this->root);
+    std::cout << output.resize(output.size() - 1) << std::endl; // Leave out the last space
 }
 
 // Recursive helper for printInsert

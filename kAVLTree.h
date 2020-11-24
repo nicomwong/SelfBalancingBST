@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 class kAVLTree
 {
@@ -19,6 +20,7 @@ public:
 
     void printInsert(int whole, int frac);  // Prints "'whole.frac' inserted" if it was not previously in the tree
     void printSearch(int whole, int frac);  // Prints "'whole.frac' found" if it is in the tree
+    void printInOrder();    // Prints the node values in-order
 
 private:
     struct NodeVal  // Stores single-precision decimal that supports comparison
