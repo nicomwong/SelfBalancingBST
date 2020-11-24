@@ -34,27 +34,14 @@ Node* kAVLTree::printInsertRecurs(int whole, int frac, Node* n)
         return n;
     }
 
-    if (whole < n->whole)
+    if (whole < n->whole || whole == n->whole && frac < n->frac)
     {   // Insert into left subtree
         n->left = printInsertRecurs(whole, frac, n->left);
     }
 
-    else if (whole > n->whole)
+    else // (whole > n->whole || whole == n->whole && frac > n->frac)
     {   // Insert into right subtree
         n->right = printInsertRecurs(whole, frac, n->right);
-    }
-
-    else // whole == n->whole
-    {
-        if (frac < n->frac)
-        {   // Insert into left subtree
-            n->left = printInsertRecurs(whole, frac, n->left);
-        }
-
-        else // frac > n->frac
-        {   // Insert into right subtree
-            n->right = printInsertRecurs(whole, frac, n->right);
-        }
     }
 
     // TO-DO: Implement Second part (below)
