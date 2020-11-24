@@ -57,6 +57,7 @@ Node* kAVLTree::printInsertRecurs(int whole, int frac, Node* n)
         }
     }
 
+    // TO-DO: Implement Second part (below)
     /*  Second:
      *      Update the height of this node
      *      Check if the height property has been broken
