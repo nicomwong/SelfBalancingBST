@@ -17,7 +17,8 @@ class kAVLTree
 public:
     kAVLTree(int k);    // Constructs kAVLTree with parameter k
 
-    void printInsert(int whole, int frac); // Prints "'whole.frac' inserted" if it was not previously in the tree
+    void printInsert(int whole, int frac);  // Prints "'whole.frac' inserted" if it was not previously in the tree
+    void printSearch(int whole, int frac);  // Prints "'whole.frac' found" if it is in the tree
 
 private:
     struct NodeVal  // Stores single-precision decimal that supports comparison

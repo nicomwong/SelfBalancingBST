@@ -1,5 +1,7 @@
 // kAVLTree.cpp
 
+#include "kAVLTree.h"
+
 #include <iostream>
 
 // Constructs a k-AVLTree with parameter k
@@ -10,7 +12,37 @@ kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
 // Prints "'whole.frac' inserted" if it was inserted
 void kAVLTree::printInsert(int whole, int frac)
 {
-    this->root = printInsertRecurs(whole, frac, this->root);
+    NodeVal val(whole, frac);
+    this->root = printInsertRecurs(val, this->root);
+}
+
+// Prints "'whole.frac' found" if it is in the tree
+void kAVLTree::printSearch(int whole, int frac)
+{
+    NodeVal nv(whole, frac);
+
+    Node* n = this->root;
+    while (n)
+    {
+        if (nv < n->value)
+        {
+            n = n->left;
+        }
+
+        else if (nv > n->value)
+        {
+            n = n->right;
+        }
+
+        else // nv == n->value
+        {
+            std::cout << nv << " found" << std::endl;
+            return;
+        }
+    }
+    
+    // Now, n == nullptr, so the node is not in the tree
+    std::cout << nv << " not found" << std::endl;
 }
 
 // Recursive helper for printInsert
