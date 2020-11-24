@@ -19,7 +19,7 @@ void kAVLTree::printInsert(int whole, int frac)
 // Self-balancing is done by walking up to the root, finding the first node where the AVL height property is broken
 //  Then, a single- or double- rotation is performed to rebalance
 //  ??? This is recursively done upwards (toward the root)
-Node* kAVLTree::printInsertRecurs(int whole, int frac, Node* n)
+Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 {
     /* First, insert the node and print so (if it does not already exist) */
 
@@ -29,17 +29,17 @@ Node* kAVLTree::printInsertRecurs(int whole, int frac, Node* n)
         return createNode(whole, frac);
     }
 
-    if (whole == n->whole && frac == n->frac)
+    if (nv == n->value)
     {   // Node already exists, so do nothing and return
         return n;
     }
 
-    if (whole < n->whole || whole == n->whole && frac < n->frac)
+    if (nv < n->value)
     {   // Insert into left subtree
         n->left = printInsertRecurs(whole, frac, n->left);
     }
 
-    else // (whole > n->whole || whole == n->whole && frac > n->frac)
+    else // nv > n->value
     {   // Insert into right subtree
         n->right = printInsertRecurs(whole, frac, n->right);
     }
@@ -54,8 +54,42 @@ Node* kAVLTree::printInsertRecurs(int whole, int frac, Node* n)
 
 Node* kAVLTree::createNode(int whole, int frac)
 {
-    Node* n = new Node;
-    n->whole = whole;
-    n->frac = frac;
+    Node* n = new Node;     // Create node on heap
+    n->value(whole, frac);  // Put in contents
     return n;
+}
+
+/* START: NodeVal member functions */
+
+// Default constructor
+NodeVal::NodeVal() : whole(-1), fract(0)
+{}
+
+// Parameterized constructor
+NodeVal::NodeVal(int whole, int fract) : whole(whole), fract(fract)
+{}
+
+// Overloaded assignment operator
+NodeVal NodeVal::operator=(NodeVal const& other)
+{
+    this->whole = other.whole;
+    this->fract = other.fract;
+}
+
+// Overloaded equality operator
+bool NodeVal::operator==(NodeVal const& other)
+{
+    return this->whole == other.whole && this->fract == other.fract;
+}
+
+// Overloaded less than operator
+bool NodeVal::operator<(NodeVal const& other)
+{
+    return this->whole < other.whole || (this->whole == other.whole && this->fract < other.fract);
+}
+
+// Overloaded greater than operator
+bool NodeVal::operator>(NodeVal const& other)
+{
+    return this->whole > other.whole || (this->whole == other.whole && this->fract > other.fract);
 }

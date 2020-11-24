@@ -20,9 +20,22 @@ public:
     void printInsert(int whole, int frac); // Prints "'whole.frac' inserted" if it was not previously in the tree
 
 private:
+    struct NodeVal  // Stores single-precision decimal that supports comparison
+    {
+        NodeVal();  // Default constructor
+        NodeVal(int whole, int fract);  // Parameterized constructor
+        
+        NodeVal NodeVal::operator=(NodeVal const& other);    // Overloaded assignment operator
+        bool NodeVal::operator==(NodeVal const& other);  // Overloaded equality operator
+        bool NodeVal::operator<(NodeVal const& other);   // Overloaded less than operator
+        bool NodeVal::operator>(NodeVal const& other);   // Overloaded greater than operator
+
+        int whole, fract;
+    };
+    
     struct Node
     {
-        int whole, fract;   // Single-precision decimal value
+        NodeVal value;      // Single-precision decimal value
         int height;         // Current height of this node
         Node* left, right;  // Left and right children
     };
