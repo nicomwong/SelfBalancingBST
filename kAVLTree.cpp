@@ -57,7 +57,7 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 
     if (n == nullptr)
     {   // Reached end, so insert, print, and return
-        std::cout << whole << "." << frac << " inserted" << std::endl;
+        std::cout << nv << " inserted" << std::endl;
         return createNode(whole, frac);
     }
 
