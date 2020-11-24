@@ -27,9 +27,12 @@ private:
         NodeVal(int whole, int fract);  // Parameterized constructor
         
         NodeVal NodeVal::operator=(NodeVal const& other);    // Overloaded assignment operator
+
         bool NodeVal::operator==(NodeVal const& other);  // Overloaded equality operator
         bool NodeVal::operator<(NodeVal const& other);   // Overloaded less than operator
         bool NodeVal::operator>(NodeVal const& other);   // Overloaded greater than operator
+
+        friend std::ostream& operator<<(std::ostream& out, NodeVal const& nv);  // Overloaded ostream insertion operator
 
         int whole, fract;
     };

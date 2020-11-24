@@ -125,3 +125,10 @@ bool NodeVal::operator>(NodeVal const& other)
 {
     return this->whole > other.whole || (this->whole == other.whole && this->fract > other.fract);
 }
+
+// Overloaded ostream insertion operator
+std::ostream& operator<<(std::ostream& out, NodeVal const& nv)
+{
+    out << nv.whole << "." << nv.fract;
+    return out;
+}
