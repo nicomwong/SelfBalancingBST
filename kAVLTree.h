@@ -47,7 +47,8 @@ private:
     Node* root;
     int k;
 
-    Node* printInsertRecurs(int whole, int frac, Node* n); // Recursive helper for printInsert; returns new root after insertion and self-balancing
+    Node* printInsertRecurs(NodeVal const& nv, Node* n); // Recursive helper for printInsert; returns new root after insertion and self-balancing
+    std::string printInOrderRecurs(Node* n);    // Recursive helper for printInOrder; returns string of values in-order, space-separated
 
     Node* createNode(int whole, int frac);  // Returns a newly-created node with parameter values
 };

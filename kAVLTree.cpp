@@ -84,6 +84,18 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
     */
 }
 
+// Recursive helper for printInOrder
+// Returns a string of the nodes in the tree with root n in-order, space-separated
+std::string kAVLTree::printInOrderRecurs(Node* n)
+{
+    if (n == nullptr)
+    {
+        return;
+    }
+
+    return printInOrderRecurs(n->left) + n->nv.toString() + " " + printInOrderRecurs(n->right);
+}
+
 Node* kAVLTree::createNode(int whole, int frac)
 {
     Node* n = new Node;     // Create node on heap
