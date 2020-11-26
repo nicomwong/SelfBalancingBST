@@ -120,17 +120,12 @@ std::string kAVLTree::printPreOrderRecurs(Node* n) const
     if (n == nullptr)
 	return printPreOrderRecurs(n->left) + n->value.toString() + " " + printPreOrderRecurs(n->right);
 }
-        return "";
-    }
 
-    return printInOrderRecurs(n->left) + n->value.toString() + " " + printInOrderRecurs(n->right);
-}
-std::string kAVLTree::printInOrderRecurs(Node* n)
+// Returns a newly-created node with input parameter values
+kAVLTree::Node* kAVLTree::createNode(int whole, int frac) const
 {
-    if (n == nullptr)
-    {
-        return;
-    }
+    return new Node(whole, frac);
+}
 
     return printInOrderRecurs(n->left) + n->nv.toString() + " " + printInOrderRecurs(n->right);
 }
