@@ -177,9 +177,8 @@ bool NodeVal::operator>(NodeVal const& other)
     return this->whole > other.whole || (this->whole == other.whole && this->fract > other.fract);
 }
 
-// Overloaded ostream insertion operator
-std::ostream& operator<<(std::ostream& out, NodeVal const& nv)
+// Returns a string of 'whole.fract'
+std::string kAVLTree::NodeVal::toString() const
 {
-    out << nv.whole << "." << nv.fract;
-    return out;
+    return this->whole + "." + this->fract;
 }

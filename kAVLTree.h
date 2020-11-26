@@ -35,8 +35,8 @@ private:
         bool NodeVal::operator<(NodeVal const& other);   // Overloaded less than operator
         bool NodeVal::operator>(NodeVal const& other);   // Overloaded greater than operator
 
-        friend std::ostream& operator<<(std::ostream& out, NodeVal const& nv);  // Overloaded ostream insertion operator
-
+        std::string toString() const; // Returns a string of 'whole.fract'
+        
         int whole, fract;
     };
     
