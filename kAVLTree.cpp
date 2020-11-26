@@ -78,14 +78,14 @@ void kAVLTree::printPreOrder() const
 // Self-balancing is done by walking up to the root, finding the first node where the AVL height property is broken
 //  Then, a single- or double- rotation is performed to rebalance
 //  ??? This is recursively done upwards (toward the root)
-Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
+kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 {
     /* First, insert the node and print so (if it does not already exist) */
 
     if (n == nullptr)
     {   // Reached end, so insert, print, and return
-        std::cout << nv << " inserted" << std::endl;
-        return createNode(whole, frac);
+        std::cout << nv.toString() << " inserted" << std::endl;
+        return createNode(nv.whole, nv.fract);
     }
 
     if (nv == n->value)
@@ -95,12 +95,12 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 
     if (nv < n->value)
     {   // Insert into left subtree
-        n->left = printInsertRecurs(whole, frac, n->left);
+        n->left = printInsertRecurs(nv, n->left);
     }
 
     else // nv > n->value
     {   // Insert into right subtree
-        n->right = printInsertRecurs(whole, frac, n->right);
+        n->right = printInsertRecurs(nv, n->right);
     }
 
     // TO-DO: Implement Second part (below)
@@ -108,6 +108,9 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
      *      Update the height of this node
      *      Check if the height property has been broken
      *          If it has been broken, then perform single- or double- rotation to rebalance
+    */
+}
+
 
 // Recursive helper for printPreOrder
 // Returns a string of the nodes in the tree with root n pre-order, space-separated
