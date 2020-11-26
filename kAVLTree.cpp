@@ -47,15 +47,16 @@ void kAVLTree::printSearch(int whole, int frac)
 }
 
 // Prints the node values in-order
-void kAVLTree::printInOrder()
+void kAVLTree::printInOrder() const
 {
     if (root == nullptr)
     {   // Tree is empty, so print nothing
         return;
     }
 
-    const std::string output = printInOrderRecurs(this->root);
-    std::cout << output.resize(output.size() - 1) << std::endl; // Leave out the last space
+    std::string keysInOrder = printInOrderRecurs(this->root);
+    keysInOrder.resize(keysInOrder.size() - 1);     // Leave out the last space
+    std::cout << keysInOrder << std::endl;
 }
 
 // Recursive helper for printInsert
@@ -98,7 +99,15 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 }
 
 // Recursive helper for printInOrder
-// Returns a string of the nodes in the tree with root n in-order, space-separated
+std::string kAVLTree::printInOrderRecurs(Node* n) const
+{
+    if (n == nullptr)
+    {
+        return "";
+    }
+
+    return printInOrderRecurs(n->left) + n->value.toString() + " " + printInOrderRecurs(n->right);
+}
 std::string kAVLTree::printInOrderRecurs(Node* n)
 {
     if (n == nullptr)

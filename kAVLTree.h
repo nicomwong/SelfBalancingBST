@@ -19,8 +19,8 @@ public:
     kAVLTree(int k);    // Constructs kAVLTree with parameter k
 
     void printInsert(int whole, int frac);  // Prints "'whole.frac' inserted" if it was not previously in the tree
-    void printSearch(int whole, int frac);  // Prints "'whole.frac' found" if it is in the tree
-    void printInOrder();    // Prints the node values in-order
+    void printInOrder() const;    // Prints the node values in-order
+    void printPreOrder() const;   // Prints the node values pre-order
 
 private:
     struct NodeVal  // Stores single-precision decimal that supports comparison
@@ -50,7 +50,8 @@ private:
     int k;
 
     Node* printInsertRecurs(NodeVal const& nv, Node* n); // Recursive helper for printInsert; returns new root after insertion and self-balancing
-    std::string printInOrderRecurs(Node* n);    // Recursive helper for printInOrder; returns string of values in-order, space-separated
+    std::string printInOrderRecurs(Node* n) const;    // Recursive helper for printInOrder; returns string of values in-order, space-separated
+	std::string printPreOrderRecurs(Node* n) const;	// Recursive helper for printPreOrder; returns a string of values pre-order, space-separated
 
     Node* createNode(int whole, int frac);  // Returns a newly-created node with parameter values
 };
