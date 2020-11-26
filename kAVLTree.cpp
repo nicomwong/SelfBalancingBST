@@ -145,9 +145,7 @@ kAVLTree::Node* kAVLTree::createNode(int whole, int frac) const
 
 // Parameterized Constructor
 kAVLTree::Node::Node(int whole, int fract) : height(-1), value(whole, fract)
-{
-    this->value = NodeVal(whole, fract);
-}
+{}
 
 /* END: Node member functions */
 
