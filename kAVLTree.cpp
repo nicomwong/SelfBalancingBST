@@ -141,15 +141,15 @@ kAVLTree::Node* kAVLTree::createNode(int whole, int frac) const
     return new Node(whole, frac);
 }
 
-    return printInOrderRecurs(n->left) + n->nv.toString() + " " + printInOrderRecurs(n->right);
+/* START: Node member functions */
+
+// Parameterized Constructor
+kAVLTree::Node::Node(int whole, int fract) : height(-1), value(whole, fract)
+{
+    this->value = NodeVal(whole, fract);
 }
 
-Node* kAVLTree::createNode(int whole, int frac)
-{
-    Node* n = new Node;     // Create node on heap
-    n->value(whole, frac);  // Put in contents
-    return n;
-}
+/* END: Node member functions */
 
 /* START: NodeVal member functions */
 

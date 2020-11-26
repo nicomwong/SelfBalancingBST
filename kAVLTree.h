@@ -39,12 +39,15 @@ private:
         
         int whole, fract;
     };
-    
+
     struct Node
     {
-        NodeVal value;      // Single-precision decimal value
-        int height;         // Current height of this node
-        Node* left, right;  // Left and right children
+        Node(int whole, int fract); // Parameterized constructor
+
+        NodeVal value;  // Single-precision decimal value
+        int height;     // Current height of this node
+        Node* left;     // Left child
+        Node* right;    // Right child
     };
 
     Node* root;
