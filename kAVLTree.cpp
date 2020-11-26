@@ -126,12 +126,12 @@ std::string kAVLTree::printInOrderRecurs(Node* n) const
 // Recursive helper for printPreOrder
 // Returns a string of the nodes in the tree with root n pre-order, space-separated
 std::string kAVLTree::printPreOrderRecurs(Node* n) const
-}
+{
 	if (n == nullptr)
 	{
 		return "";
 	}
-    if (n == nullptr)
+
 	return printPreOrderRecurs(n->left) + n->value.toString() + " " + printPreOrderRecurs(n->right);
 }
 
