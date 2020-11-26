@@ -29,11 +29,11 @@ private:
         NodeVal();  // Default constructor
         NodeVal(int whole, int fract);  // Parameterized constructor
         
-        NodeVal NodeVal::operator=(NodeVal const& other);    // Overloaded assignment operator
+        NodeVal& operator=(NodeVal const& other);    // Overloaded assignment operator
 
-        bool NodeVal::operator==(NodeVal const& other);  // Overloaded equality operator
-        bool NodeVal::operator<(NodeVal const& other);   // Overloaded less than operator
-        bool NodeVal::operator>(NodeVal const& other);   // Overloaded greater than operator
+        bool operator==(NodeVal const& other) const;  // Overloaded equality operator
+        bool operator<(NodeVal const& other) const;   // Overloaded less than operator
+        bool operator>(NodeVal const& other) const;   // Overloaded greater than operator
 
         std::string toString() const; // Returns a string of 'whole.fract'
         

@@ -144,35 +144,32 @@ Node* kAVLTree::createNode(int whole, int frac)
 
 /* START: NodeVal member functions */
 
-// Default constructor
-NodeVal::NodeVal() : whole(-1), fract(0)
-{}
-
 // Parameterized constructor
-NodeVal::NodeVal(int whole, int fract) : whole(whole), fract(fract)
+kAVLTree::NodeVal::NodeVal(int whole, int fract) : whole(whole), fract(fract)
 {}
 
 // Overloaded assignment operator
-NodeVal NodeVal::operator=(NodeVal const& other)
+kAVLTree::NodeVal& kAVLTree::NodeVal::operator=(NodeVal const& other)
 {
     this->whole = other.whole;
     this->fract = other.fract;
+	return *this;
 }
 
 // Overloaded equality operator
-bool NodeVal::operator==(NodeVal const& other)
+bool kAVLTree::NodeVal::operator==(NodeVal const& other) const
 {
     return this->whole == other.whole && this->fract == other.fract;
 }
 
 // Overloaded less than operator
-bool NodeVal::operator<(NodeVal const& other)
+bool kAVLTree::NodeVal::operator<(NodeVal const& other) const
 {
     return this->whole < other.whole || (this->whole == other.whole && this->fract < other.fract);
 }
 
 // Overloaded greater than operator
-bool NodeVal::operator>(NodeVal const& other)
+bool kAVLTree::NodeVal::operator>(NodeVal const& other) const
 {
     return this->whole > other.whole || (this->whole == other.whole && this->fract > other.fract);
 }
