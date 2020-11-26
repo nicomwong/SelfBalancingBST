@@ -59,6 +59,19 @@ void kAVLTree::printInOrder() const
     std::cout << keysInOrder << std::endl;
 }
 
+// Prints the node values pre-order
+void kAVLTree::printPreOrder() const
+{
+	if (root == nullptr)
+	{	// Tree is empty, so print nothing
+		return;
+	}
+
+	std::string keysPreOrder = printPreOrderRecurs(this->root);
+    keysPreOrder.resize(keysPreOrder.size() - 1);   // Leave out the last space
+	std::cout << keysPreOrder << std::endl;
+}
+
 // Recursive helper for printInsert
 // Returns a pointer to the new root of the subtree after inserting and self-balancing
 // Insert is the same as in BSTs
@@ -95,14 +108,18 @@ Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
      *      Update the height of this node
      *      Check if the height property has been broken
      *          If it has been broken, then perform single- or double- rotation to rebalance
-    */
-}
 
-// Recursive helper for printInOrder
-std::string kAVLTree::printInOrderRecurs(Node* n) const
-{
+// Recursive helper for printPreOrder
+// Returns a string of the nodes in the tree with root n pre-order, space-separated
+std::string kAVLTree::printPreOrderRecurs(Node* n) const
+}
+	if (n == nullptr)
+	{
+		return "";
+	}
     if (n == nullptr)
-    {
+	return printPreOrderRecurs(n->left) + n->value.toString() + " " + printPreOrderRecurs(n->right);
+}
         return "";
     }
 
