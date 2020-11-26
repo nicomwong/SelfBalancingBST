@@ -26,7 +26,6 @@ public:
 private:
     struct NodeVal  // Stores single-precision decimal that supports comparison
     {
-        NodeVal();  // Default constructor
         NodeVal(int whole, int fract);  // Parameterized constructor
         
         NodeVal& operator=(NodeVal const& other);    // Overloaded assignment operator
