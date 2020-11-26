@@ -111,6 +111,17 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
     */
 }
 
+// Recursive helper for printInOrder
+// Returns a string of the nodes in the tree with root n in-order, space-separated
+std::string kAVLTree::printInOrderRecurs(Node* n) const
+{
+    if (n == nullptr)
+    {
+        return "";
+    }
+
+    return printInOrderRecurs(n->left) + n->value.toString() + " " + printInOrderRecurs(n->right);
+}
 
 // Recursive helper for printPreOrder
 // Returns a string of the nodes in the tree with root n pre-order, space-separated
