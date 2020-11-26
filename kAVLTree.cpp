@@ -18,7 +18,7 @@ void kAVLTree::printInsert(int whole, int frac)
 }
 
 // Prints "'whole.frac' found" if it is in the tree
-void kAVLTree::printSearch(int whole, int frac)
+void kAVLTree::printSearch(int whole, int frac) const
 {
     NodeVal nv(whole, frac);    // node value to search for
 
@@ -37,13 +37,13 @@ void kAVLTree::printSearch(int whole, int frac)
 
         else // nv == n->value
         {   // Found node, so print and return
-            std::cout << nv << " found" << std::endl;
+            std::cout << nv.toString() << " found" << std::endl;
             return;
         }
     }
     
     // Now, n == nullptr, so the node is not in the tree
-    std::cout << nv << " not found" << std::endl;
+    std::cout << nv.toString() << " not found" << std::endl;
 }
 
 // Prints the node values in-order
