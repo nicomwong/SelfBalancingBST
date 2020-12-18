@@ -20,6 +20,7 @@ public:
 
     void printInsert(int whole, int frac);  // Prints "'whole.frac' inserted" if it was not previously in the tree
     void printSearch(int whole, int frac) const;  // Prints "'whole.frac' found" if it is in the tree
+    void printApproxSearch(int whole, int frac) const;  // Prints "closest to 'whole.frac' is 'closest_whole.closest_frac'" 
     void printInOrder() const;    // Prints the node values in-order
     void printPreOrder() const;   // Prints the node values pre-order
 

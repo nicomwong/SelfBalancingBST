@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <queue>
 
 // Constructs a k-AVLTree with parameter k
 kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
@@ -44,6 +45,82 @@ void kAVLTree::printSearch(int whole, int frac) const
     
     // Now, n == nullptr, so the node is not in the tree
     std::cout << nv.toString() << " not found" << std::endl;
+}
+
+// Prints "closest to 'whole.frac' is 'closest_whole.closest_frac'"
+void kAVLTree::printApproxSearch(int whole, int frac) const
+{
+    if (this->root == nullptr)
+    {   // Tree is empty, so print nothing
+        return;
+    }
+
+    NodeVal nv(whole, frac);    // Node value to approximate-search for
+
+    std::queue<NodeVal> recent;  // Queue to track up to 2 most-recently visited nodes
+
+    Node* n = this->root;
+    while (n)
+    {
+        if (recent.size() == 2)
+        {
+            recent.pop();
+        }
+        recent.push(n->value);
+
+        if (nv < n->value)
+        {   // Search left subtree
+            n = n->left;
+        }
+
+        else if (nv > n->value)
+        {   // Search right subtree
+            n = n->right;
+        }
+
+        else // nv == n->value
+        {   // Found node, so print and return
+            std::cout << nv.toString() << " found" << std::endl;
+            return;
+        }
+    }
+
+    // Once we hit a nullptr, we know the node is not in the tree
+    // But, we are where the node being searched for would be if it existed
+    // And, the queue holds the only two relevant nodes needed to find the closest one
+    // So, we will compare the queue's two nodes' values and print which one is closest
+    //  If both are equally close, then we will print the least of the two
+
+    NodeVal closest(-1, -1);    // Stores closest NodeVal, for readability
+
+    if (recent.size() == 1)
+    {
+        closest = recent.front();
+        recent.pop();
+    }
+
+    else    // recent.size() == 2
+    {
+        NodeVal first = recent.front();
+        NodeVal second = recent.back();
+
+        if (first - nv < second - nv)
+        {
+            closest = first;
+        }
+
+        else if (first - nv > second - nv)
+        {
+            closest = second;
+        }
+
+        else    // first - nv == second - nv
+        {
+            closest = first < second ? first : second;
+        }
+    }
+
+    std::cout << "closest to " << nv.toString() << " is " << closest.toString() << std::endl;
 }
 
 // Prints the node values in-order
