@@ -141,15 +141,15 @@ kAVLTree::Node* kAVLTree::createNode(int whole, int frac) const
     return new Node(whole, frac);
 }
 
-/* START: Node member functions */
+/** START: Node member functions **/
 
 // Parameterized Constructor
 kAVLTree::Node::Node(int whole, int fract) : height(-1), value(whole, fract)
 {}
 
-/* END: Node member functions */
+/** END: Node member functions **/
 
-/* START: NodeVal member functions */
+/** START: NodeVal member functions **/
 
 // Parameterized constructor
 kAVLTree::NodeVal::NodeVal(int whole, int fract) : whole(whole), fract(fract)
