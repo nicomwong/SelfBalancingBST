@@ -13,7 +13,7 @@ kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
 // Prints "'whole.frac' inserted" if it was inserted
 void kAVLTree::printInsert(int whole, int frac)
 {
-    NodeVal val(whole, frac);
+    const NodeVal val(whole, frac);
     this->root = printInsertRecurs(val, this->root);
 }
 
