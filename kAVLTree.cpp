@@ -181,6 +181,12 @@ bool kAVLTree::NodeVal::operator>(NodeVal const& other) const
     return this->whole > other.whole || (this->whole == other.whole && this->fract > other.fract);
 }
 
+// Overloaded subtraction operator
+kAVLTree::NodeVal kAVLTree::NodeVal::operator-(NodeVal const& other) const
+{
+    return NodeVal(this->whole - other.whole, this->fract - other.fract);
+}
+
 // Returns a string of 'whole.fract'
 std::string kAVLTree::NodeVal::toString() const
 {

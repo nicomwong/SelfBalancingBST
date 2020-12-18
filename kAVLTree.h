@@ -34,6 +34,8 @@ private:
         bool operator<(NodeVal const& other) const;   // Overloaded less than operator
         bool operator>(NodeVal const& other) const;   // Overloaded greater than operator
 
+        NodeVal operator-(NodeVal const& other) const;  // Overloaded subtraction operator
+
         std::string toString() const; // Returns a string of 'whole.fract'
         
         int whole, fract;
