@@ -132,7 +132,7 @@ std::string kAVLTree::printPreOrderRecurs(Node* n) const
 		return "";
 	}
 
-	return printPreOrderRecurs(n->left) + n->value.toString() + " " + printPreOrderRecurs(n->right);
+	return n->value.toString() + " " + printPreOrderRecurs(n->left) + printPreOrderRecurs(n->right);
 }
 
 // Returns a newly-created node with input parameter values
