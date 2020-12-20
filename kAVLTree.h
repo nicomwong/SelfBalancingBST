@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <queue>
 
 class kAVLTree
 {
@@ -55,7 +56,8 @@ private:
     Node* root;
     int k;
 
-    Node* printInsertRecurs(NodeVal const& nv, Node* n); // Recursive helper for printInsert; returns new root after insertion and self-balancing
+    Node* printInsertRecurs(NodeVal const& nv, Node* n, std::queue<Node*>& recent); // Recursive helper for printInsert; returns new root after insertion and self-balancing
+    Node* printDeleteRecurs(NodeVal const& nv, Node* n); // Recursive helper for printDelete; returns new root after deletion and self-balancing
     std::string printInOrderRecurs(Node* n) const;    // Recursive helper for printInOrder; returns string of values in-order, space-separated
 	std::string printPreOrderRecurs(Node* n) const;	// Recursive helper for printPreOrder; returns a string of values pre-order, space-separated
 

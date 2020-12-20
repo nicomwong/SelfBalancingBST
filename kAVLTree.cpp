@@ -16,7 +16,8 @@ kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
 void kAVLTree::printInsert(int whole, int frac)
 {
     const NodeVal val(whole, frac);
-    this->root = printInsertRecurs(val, this->root);
+    std::queue<Node*> recent;
+    this->root = printInsertRecurs(val, this->root, recent);
 }
 
 // Prints "'whole.frac' found" if it is in the tree
@@ -152,18 +153,19 @@ void kAVLTree::printPreOrder() const
 
 // Recursive helper for printInsert
 // Returns a pointer to the new root of the subtree after inserting and self-balancing
-// Insert is the same as in BSTs
-// Self-balancing is done by walking up to the root, finding the first node where the AVL height property is broken
+// Self-balancing is done during pre-order, where the AVL height property is broken
 //  Then, a single- or double- rotation is performed to rebalance
-//  ??? This is recursively done upwards (toward the root)
-kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
+// The queue, recent, stores at most the 2 most-recently visited descendents during the recursive backtrack
+kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::queue<Node*>& recent)
 {
     /* First, insert the node and print so (if it does not already exist) */
 
     if (n == nullptr)
-    {   // Reached end, so insert, print, and return
+    {   // Reached end, so insert, print, push to queue, and return
         std::cout << nv.toString() << " inserted" << std::endl;
-        return createNode(nv.whole, nv.fract);
+        Node* newNode = createNode(nv.whole, nv.fract);
+        recent.push(newNode);
+        return newNode;
     }
 
     if (nv == n->value)
@@ -173,12 +175,95 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 
     if (nv < n->value)
     {   // Insert into left subtree
-        n->left = printInsertRecurs(nv, n->left);
+        n->left = printInsertRecurs(nv, n->left, recent);
     }
 
     else // nv > n->value
     {   // Insert into right subtree
-        n->right = printInsertRecurs(nv, n->right);
+        n->right = printInsertRecurs(nv, n->right, recent);
+    }
+
+    // TO-DO: Implement Second part (below)
+    /*  Second:
+     *     Check if the height property has been broken
+     *          If it has been broken, then:
+     *              1. Determine which case (1-4)
+     *              2. Perform single- or double- rotation to rebalance (depending on step 1)
+     *              3. Update the heights of X, Y, Z
+     *              4. Clear the queue
+     *              5. Return the corresponding new root (determined in step 2)
+     *          If it hasn't been broken, then:
+     *              1. Add this Node to the size-2 queue
+     *              2. Update the height of this node
+     *              3. Return this node
+     */
+    
+    /* Check for height imbalance */
+    
+    if (isImbalanced(n) )
+    {   // Height imbalance
+        // Determine case and run its specific rotation function
+        Node* y = recent.back();    // Y is the child of Z that leads to the insertion location
+        Node* x = recent.front();   // X is the child of Y that leads to the insertion location
+        recent.pop(); // Empty the queue because rotations will make queue information undefined
+        recent.pop();
+
+        Node* newRoot = nullptr;    // Store new root, for readability
+
+        if (y == n->left)
+        {
+            if (x == y->left)
+            {   // Case 1
+                newRoot = rotateCW(n); // Rotate Y, Z clockwise
+                // std::cout << "case 1 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
+            }
+
+            else    // x == y->right
+            {   // Case 3
+                n->left = rotateCounterCW(y);   // Rotate X, Y counter-clockwise
+                                                // Now, X is Z's left child
+                newRoot = rotateCW(n); // Rotate X, Z clockwise
+                // std::cout << "case 3 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
+            }
+        }
+
+        else    // y == n->right
+        {
+            if (x == y->left)
+            {   // Case 4
+                n->right = rotateCW(y); // Rotate X, Y clockwise
+                                        // Now, X is Z's right child
+                newRoot = rotateCounterCW(n);  // Rotate X, Z counter-clockwise
+                // std::cout << "case 4 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
+            }
+
+            else    // x == y->right
+            {   // Case 2
+                newRoot = rotateCounterCW(n);    // Rotate Y, Z counter-clockwise
+                // std::cout << "case 2 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
+            }
+        }
+
+        return newRoot; // Return the new root
+    }
+
+    else    // No height imbalance
+    {
+        // Update the height of this node
+        updateHeight(n);
+        
+        // Update the queue, recent
+        if (recent.size() == 2)
+        {
+            recent.pop();
+        }
+        recent.push(n);
+
+        return n;
+    }
+
+    return nullptr; // Should not be reached?
+}
     }
 
     // TO-DO: Implement Second part (below)
