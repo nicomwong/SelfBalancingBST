@@ -267,5 +267,5 @@ kAVLTree::NodeVal kAVLTree::NodeVal::operator-(NodeVal const& other) const
 // Returns a string of 'whole.fract'
 std::string kAVLTree::NodeVal::toString() const
 {
-    return this->whole + "." + this->fract;
+    return std::to_string(this->whole) + "." + std::to_string(this->fract);
 }
