@@ -16,8 +16,7 @@ kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
 void kAVLTree::printInsert(int whole, int frac)
 {
     const NodeVal val(whole, frac);
-    std::queue<Node*> recent;
-    this->root = printInsertRecurs(val, this->root, recent);
+    this->root = printInsertRecurs(val, this->root);
 }
 
 // Prints "'whole.frac' found" if it is in the tree
@@ -156,17 +155,14 @@ void kAVLTree::printPreOrder() const
 // Self-balancing is done during pre-order, where the AVL height property is broken
 //  Then, a single- or double- rotation is performed to rebalance
 // The queue, recent, stores at most the 2 most-recently visited descendents during the recursive backtrack
-kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::queue<Node*>& recent)
-{
+kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
     /* First, insert the node and print so (if it does not already exist) */
 
     if (n == nullptr)
     {   // Reached end, so insert, print, push to queue, and return
-        std::cout << nv.toString() << " inserted" << std::endl;
+    {   // Reached end, so insert, print, and return
         Node* newNode = createNode(nv.whole, nv.fract);
-        recent.push(newNode);
-        return newNode;
-    }
+        return createNode(nv.whole, nv.fract);
 
     if (nv == n->value)
     {   // Node already exists, so do nothing and return
@@ -176,17 +172,52 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::que
     if (nv < n->value)
     {   // Insert into left subtree
         n->left = printInsertRecurs(nv, n->left, recent);
-    }
+        n->left = printInsertRecurs(nv, n->left);
 
     else // nv > n->value
     {   // Insert into right subtree
         n->right = printInsertRecurs(nv, n->right, recent);
+        n->right = printInsertRecurs(nv, n->right);
     }
+    
+    /* Check for height imbalance after deleting */
+    
+    if (isImbalanced(n) )
+    {   // Height imbalance, so rebalance it
+        return rebalance(n);
+    }
+
+    else    // No height imbalance
+    {
+        // Update the height of this node
+        updateHeight(n);
+        
+        return n;
+// Returns the new root after rebalancing the tree
+// X, Y are determined as the greater-height children or subchildren, respectively, of Z
+kAVLTree::Node* kAVLTree::rebalance(Node* n)
+{
+    }
+}
+    // Get the left and right subtree heights of Z
+    int leftHeight = n->left ? n->left->height : -1;
+    int rightHeight = n->right ? n->right->height : -1;
+    
+    // Set Y to child of Z with greater height
+    Node* y = leftHeight > rightHeight ? n->left : n->right;    
+
+    // Get the left and right subtree heights of Z
+    leftHeight = y->left ? y->left->height : -1;
+    rightHeight = y->right ? y->right->height : -1;
+
+    // Set X to child of Y with greater height
+    Node* x = leftHeight > rightHeight ? y->left : y->right;
+
+
 
     /* Check for height imbalance after deleting */
     
     if (isImbalanced(n) )
-    {   // Height imbalance
         // Determine case and run its specific rotation function
         Node* y = recent.back();    // Y is the child of Z that leads to the insertion location
         Node* x = recent.front();   // X is the child of Y that leads to the insertion location
@@ -194,7 +225,6 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::que
         recent.pop();
 
         Node* newRoot = nullptr;    // Store new root, for readability
-
         if (y == n->left)
         {
             if (x == y->left)
@@ -205,13 +235,11 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::que
 
             else    // x == y->right
             {   // Case 3
-                n->left = rotateCounterCW(y);   // Rotate X, Y counter-clockwise
                                                 // Now, X is Z's left child
                 newRoot = rotateCW(n); // Rotate X, Z clockwise
                 // std::cout << "case 3 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
             }
         }
-
         else    // y == n->right
         {
             if (x == y->left)
