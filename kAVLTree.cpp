@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <cmath>    // abs
 
 // Constructs a k-AVLTree with parameter k
 kAVLTree::kAVLTree(int k) : k(k), root(nullptr)
@@ -214,6 +215,29 @@ kAVLTree::Node* kAVLTree::rotateCounterCW(Node* n)
 
     return rightChild;           // Return Y as new root
 }
+
+// Updates the height of the given node
+// Note: Non-existent children are treated with height -1
+void kAVLTree::updateHeight(Node* n)
+{
+    // Determine the heights of the left and right subtrees
+    int leftHeight = n->left ? n->left->height : -1;
+    int rightHeight = n->right ? n->right->height : -1;
+
+    // Set this node's height
+    n->height = std::max(leftHeight, rightHeight) + 1;
+    //std::cout << "New height of " << n->value.toString() << " is " << n->height << std::endl;
+}
+
+// Returns true iff a height imbalance is seen at the given node
+bool kAVLTree::isImbalanced(Node* n) const
+{
+    // Determine the heights of the left and right subtrees
+    int leftHeight = n->left ? n->left->height : -1;
+    int rightHeight = n->right ? n->right->height : -1;
+    
+    // Return true iff the height difference is greater than k
+    return abs(leftHeight - rightHeight) > k;
 }
 
 // Recursive helper for printInOrder

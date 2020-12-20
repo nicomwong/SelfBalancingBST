@@ -61,6 +61,8 @@ private:
 
     Node* rotateCW(Node* n);    // Helper for printInsertRecurs; returns new root after rotating the left child and the current node clockwise
     Node* rotateCounterCW(Node* n); // Helper for printInsertRecurs; returns new root after rotating the right child and the current node counter-clockwise
+    void updateHeight(Node* n); // Updates the height of the given node
+    bool isImbalanced(Node* n) const; // Returns true iff a height imbalance is seen at the given node
     Node* createNode(int whole, int frac) const;  // Returns a newly-created node with input parameter values
 };
 
