@@ -59,6 +59,8 @@ private:
     std::string printInOrderRecurs(Node* n) const;    // Recursive helper for printInOrder; returns string of values in-order, space-separated
 	std::string printPreOrderRecurs(Node* n) const;	// Recursive helper for printPreOrder; returns a string of values pre-order, space-separated
 
+    Node* rotateCW(Node* n);    // Helper for printInsertRecurs; returns new root after rotating the left child and the current node clockwise
+    Node* rotateCounterCW(Node* n); // Helper for printInsertRecurs; returns new root after rotating the right child and the current node counter-clockwise
     Node* createNode(int whole, int frac) const;  // Returns a newly-created node with input parameter values
 };
 

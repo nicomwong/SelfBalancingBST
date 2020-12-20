@@ -186,6 +186,34 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
      *      Check if the height property has been broken
      *          If it has been broken, then perform single- or double- rotation to rebalance
     */
+
+// Returns new root after rotating the left child and the current node clockwise
+kAVLTree::Node* kAVLTree::rotateCW(Node* n)
+{
+    Node* leftChild = n->left;  // Store Y
+    n->left = leftChild->right; // Set Z's left to Y's right (where Z is current node and Y is Z's left child)
+    leftChild->right = n;       // Set Y's right to Z
+
+    // Update heights bottom-up
+    updateHeight(n);
+    updateHeight(leftChild);
+
+    return leftChild;           // Return Y as new root
+}
+
+// Returns new root after rotating the right child and the current node counter-clockwise
+kAVLTree::Node* kAVLTree::rotateCounterCW(Node* n)
+{
+    Node* rightChild = n->right; // Store Y
+    n->right = rightChild->left; // Set Z's right to Y's left (where Z is current node and Y is Z's right child)
+    rightChild->left = n;        // Set Y's left to Z
+
+    // Update heights bottom-up
+    updateHeight(n);
+    updateHeight(rightChild);
+
+    return rightChild;           // Return Y as new root
+}
 }
 
 // Recursive helper for printInOrder
