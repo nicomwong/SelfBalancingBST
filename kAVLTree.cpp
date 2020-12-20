@@ -183,22 +183,7 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n, std::que
         n->right = printInsertRecurs(nv, n->right, recent);
     }
 
-    // TO-DO: Implement Second part (below)
-    /*  Second:
-     *     Check if the height property has been broken
-     *          If it has been broken, then:
-     *              1. Determine which case (1-4)
-     *              2. Perform single- or double- rotation to rebalance (depending on step 1)
-     *              3. Update the heights of X, Y, Z
-     *              4. Clear the queue
-     *              5. Return the corresponding new root (determined in step 2)
-     *          If it hasn't been broken, then:
-     *              1. Add this Node to the size-2 queue
-     *              2. Update the height of this node
-     *              3. Return this node
-     */
-    
-    /* Check for height imbalance */
+    /* Check for height imbalance after deleting */
     
     if (isImbalanced(n) )
     {   // Height imbalance
