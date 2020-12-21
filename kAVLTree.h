@@ -20,6 +20,7 @@ public:
     kAVLTree(int k);    // Constructs kAVLTree with parameter k
 
     void printInsert(int whole, int frac);  // Prints "'whole.frac' inserted" if it was not previously in the tree
+    void printDelete(int whole, int frac);  // Prints "'whole.frac' deleted" if it was deleted
     void printSearch(int whole, int frac) const;  // Prints "'whole.frac' found" if it is in the tree
     void printApproxSearch(int whole, int frac) const;  // Prints "closest to 'whole.frac' is 'closest_whole.closest_frac'" 
     void printInOrder() const;    // Prints the node values in-order
@@ -62,6 +63,7 @@ private:
 	std::string printPreOrderRecurs(Node* n) const;	// Recursive helper for printPreOrder; returns a string of values pre-order, space-separated
 
     Node* rebalance(Node* n);   // Returns the new root after rebalancing the tree
+    Node* getPredecessor(Node* n);   // Returns the predecessor in a tree
     Node* rotateCW(Node* n);    // Helper for printInsertRecurs; returns new root after rotating the left child and the current node clockwise
     Node* rotateCounterCW(Node* n); // Helper for printInsertRecurs; returns new root after rotating the right child and the current node counter-clockwise
     void updateHeight(Node* n); // Updates the height of the given node

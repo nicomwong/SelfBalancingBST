@@ -19,6 +19,14 @@ void kAVLTree::printInsert(int whole, int frac)
     this->root = printInsertRecurs(val, this->root);
 }
 
+// Deletes the node wih the value 'whole.frac' if it exists
+// Prints "'whole.frac' deleted" if it was deleted
+void kAVLTree::printDelete(int whole, int frac)
+{
+    const NodeVal val(whole, frac);
+    this->root = printDeleteRecurs(val, this->root);
+}
+
 // Prints "'whole.frac' found" if it is in the tree
 void kAVLTree::printSearch(int whole, int frac) const
 {
@@ -154,15 +162,15 @@ void kAVLTree::printPreOrder() const
 // Returns a pointer to the new root of the subtree after inserting and self-balancing
 // Self-balancing is done during pre-order, where the AVL height property is broken
 //  Then, a single- or double- rotation is performed to rebalance
-// The queue, recent, stores at most the 2 most-recently visited descendents during the recursive backtrack
 kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
+{
     /* First, insert the node and print so (if it does not already exist) */
 
     if (n == nullptr)
-    {   // Reached end, so insert, print, push to queue, and return
     {   // Reached end, so insert, print, and return
-        Node* newNode = createNode(nv.whole, nv.fract);
+        std::cout << nv.toString() << " inserted" << std::endl;
         return createNode(nv.whole, nv.fract);
+    }
 
     if (nv == n->value)
     {   // Node already exists, so do nothing and return
@@ -171,12 +179,11 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
 
     if (nv < n->value)
     {   // Insert into left subtree
-        n->left = printInsertRecurs(nv, n->left, recent);
         n->left = printInsertRecurs(nv, n->left);
+    }
 
     else // nv > n->value
     {   // Insert into right subtree
-        n->right = printInsertRecurs(nv, n->right, recent);
         n->right = printInsertRecurs(nv, n->right);
     }
     
@@ -193,12 +200,78 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
         updateHeight(n);
         
         return n;
+    }
+}
+
+// Similar to printInsertRecurs, except deletes a given node if it exists (and then rebalances if needed)
+kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
+{
+    /* First, delete the node and print so (if it does already exist) */
+
+    if (n == nullptr)
+    {   // Reached end, so do nothing and return
+        return nullptr;
+    }
+
+    if (nv == n->value)
+    {   // Found the node to delete
+
+        // If the node is a leaf, then delete it and return
+        if (n->left == nullptr && n->right == nullptr)
+        {
+            delete n;
+            return nullptr;
+        }
+
+        // If the node has a left subtree, then replace it with its predecessor and then delete the predecessor
+        if (n->left)
+        {
+            Node* pred = getPredecessor(n->left);
+            n->value = pred->value;
+            n->left = printDeleteRecurs(pred->value, n->left);
+        }
+    
+        // Else, the node has a right subtree, so delete it and return its right child
+        else
+        {
+            Node* rightChild = n->right;
+            delete n;
+            return rightChild;
+        }
+    }
+
+    if (nv < n->value)
+    {   // Delete from left subtree
+        n->left = printDeleteRecurs(nv, n->left);
+    }
+
+    else // nv > n->value
+    {   // Delete from right subtree
+        n->right = printDeleteRecurs(nv, n->right);
+    }
+    
+    /* Check for height imbalance after deleting */
+    
+    if (isImbalanced(n) )
+    {   // Height imbalance, so rebalance it
+        return rebalance(n);
+    }
+
+    else    // No height imbalance, so update height and return it
+    {
+        // Update the height of this node
+        updateHeight(n);
+
+        return n;
+    }
+}
+
 // Returns the new root after rebalancing the tree
 // X, Y are determined as the greater-height children or subchildren, respectively, of Z
 kAVLTree::Node* kAVLTree::rebalance(Node* n)
 {
-    }
-}
+    Node* newRoot = nullptr;    // Store new root, for readability
+
     // Get the left and right subtree heights of Z
     int leftHeight = n->left ? n->left->height : -1;
     int rightHeight = n->right ? n->right->height : -1;
@@ -213,78 +286,48 @@ kAVLTree::Node* kAVLTree::rebalance(Node* n)
     // Set X to child of Y with greater height
     Node* x = leftHeight > rightHeight ? y->left : y->right;
 
-
-
-    /* Check for height imbalance after deleting */
-    
-    if (isImbalanced(n) )
-        // Determine case and run its specific rotation function
-        Node* y = recent.back();    // Y is the child of Z that leads to the insertion location
-        Node* x = recent.front();   // X is the child of Y that leads to the insertion location
-        recent.pop(); // Empty the queue because rotations will make queue information undefined
-        recent.pop();
-
-        Node* newRoot = nullptr;    // Store new root, for readability
-        if (y == n->left)
-        {
-            if (x == y->left)
-            {   // Case 1
-                newRoot = rotateCW(n); // Rotate Y, Z clockwise
-                // std::cout << "case 1 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
-            }
-
-            else    // x == y->right
-            {   // Case 3
-                                                // Now, X is Z's left child
-                newRoot = rotateCW(n); // Rotate X, Z clockwise
-                // std::cout << "case 3 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
-            }
-        }
-        else    // y == n->right
-        {
-            if (x == y->left)
-            {   // Case 4
-                n->right = rotateCW(y); // Rotate X, Y clockwise
-                                        // Now, X is Z's right child
-                newRoot = rotateCounterCW(n);  // Rotate X, Z counter-clockwise
-                // std::cout << "case 4 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
-            }
-
-            else    // x == y->right
-            {   // Case 2
-                newRoot = rotateCounterCW(n);    // Rotate Y, Z counter-clockwise
-                // std::cout << "case 2 with (Z = " << n->value.toString() << ", Y = " << y->value.toString() << ", X = " << x->value.toString() << ")" << std::endl;
-            }
-        }
-
-        return newRoot; // Return the new root
-    }
-
-    else    // No height imbalance
+    if (y == n->left)
     {
-        // Update the height of this node
-        updateHeight(n);
-        
-        // Update the queue, recent
-        if (recent.size() == 2)
-        {
-            recent.pop();
+        if (x == y->left)
+        {   // Case 1
+            newRoot = rotateCW(n); // Rotate Y, Z clockwise
         }
-        recent.push(n);
 
-        return n;
+        else    // x == y->right
+        {   // Case 3
+            n->left = rotateCounterCW(y);   // Rotate X, Y counter-clockwise
+                                            // Now, X is Z's left child
+            newRoot = rotateCW(n); // Rotate X, Z clockwise
+        }
     }
 
-    return nullptr; // Should not be reached?
+    else    // y == n->right
+    {
+        if (x == y->left)
+        {   // Case 4
+            n->right = rotateCW(y); // Rotate X, Y clockwise
+                                    // Now, X is Z's right child
+            newRoot = rotateCounterCW(n);  // Rotate X, Z counter-clockwise
+        }
+
+        else    // x == y->right
+        {   // Case 2
+            newRoot = rotateCounterCW(n);    // Rotate Y, Z counter-clockwise
+        }
+    }
+
+    return newRoot; // Return the new root
 }
-    }
 
-    // TO-DO: Implement Second part (below)
-    /*  Second:
-     *      Update the height of this node
-     *      Check if the height property has been broken
-     *          If it has been broken, then perform single- or double- rotation to rebalance
-    */
+// Returns the predecessor in a tree
+kAVLTree::Node* kAVLTree::getPredecessor(Node* n)
+{
+    while (n->right)
+    {
+        n = n->right;
+    }
+    return n;
+}
 
 // Returns new root after rotating the left child and the current node clockwise
 kAVLTree::Node* kAVLTree::rotateCW(Node* n)
