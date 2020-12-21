@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <string>
-#include <queue>
 #include <cmath>    // abs
 
 // Constructs a k-AVLTree with parameter k
@@ -29,7 +28,7 @@ void kAVLTree::printDelete(int whole, int frac)
     if (deleted)
     {
         std::cout << val.toString() << " deleted" << std::endl;
-}
+    }
 }
 
 // Prints "'whole.frac' found" if it is in the tree
@@ -71,69 +70,72 @@ void kAVLTree::printApproxSearch(int whole, int frac) const
 
     NodeVal nv(whole, frac);    // Node value to approximate-search for
 
-    std::queue<NodeVal> recent;  // Queue to track up to 2 most-recently visited nodes
+    std::pair<NodeVal, bool> leftBound = {NodeVal(-1, -1), false};  // Tracks left bound and whether it has been set
+    std::pair<NodeVal, bool> rightBound = {NodeVal(-1, -1), false}; // Tracks right bound
 
     Node* n = this->root;
     while (n)
     {
-        if (recent.size() == 2)
-        {
-            recent.pop();
-        }
-        recent.push(n->value);
-
         if (nv < n->value)
-        {   // Search left subtree
+        {   // Search left subtree and set right bound
+            rightBound.first = n->value;
+            rightBound.second = true;
             n = n->left;
         }
 
         else if (nv > n->value)
-        {   // Search right subtree
+        {   // Search right subtree and set left bound
+            leftBound.first = n->value;
+            leftBound.second = true;
             n = n->right;
         }
 
         else // nv == n->value
         {   // Found node, so print and return
-            std::cout << nv.toString() << " found" << std::endl;
+            std::cout << "closest to " << nv.toString() << " is " << n->value.toString() << std::endl;
             return;
         }
     }
 
     // Once we hit a nullptr, we know the node is not in the tree
-    // But, we are where the node being searched for would be if it existed
-    // And, the queue holds the only two relevant nodes needed to find the closest one
-    // So, we will compare the queue's two nodes' values and print which one is closest
+    // But if it existed, then it would be here
+    // The queue holds the only two relevant nodes needed to find the closest-valued ancestor
+    // So, we will compare the queue's two nodes' values and print the one that is closest
     //  If both are equally close, then we will print the least of the two
 
     NodeVal closest(-1, -1);    // Stores closest NodeVal, for readability
 
-    if (recent.size() == 1)
+    // If both bounds have been set, then get the closer one
+    if (leftBound.second && rightBound.second)
     {
-        closest = recent.front();
-        recent.pop();
-    }
-
-    else    // recent.size() == 2
-    {
-        NodeVal first = recent.front();
-        NodeVal second = recent.back();
-
-        if (first - nv < second - nv)
+        if ( (leftBound.first - nv).abs() < (rightBound.first - nv).abs() )
         {
-            closest = first;
+            closest = leftBound.first;
         }
 
-        else if (first - nv > second - nv)
+        else if ( (leftBound.first - nv).abs() > (rightBound.first - nv).abs() )
         {
-            closest = second;
+            closest = rightBound.first;
         }
 
         else    // first - nv == second - nv
         {
-            closest = first < second ? first : second;
+            closest = leftBound.first < rightBound.first ? leftBound.first : rightBound.first;
         }
     }
 
+    // Else if only left bound has been set, then get it
+    else if (leftBound.second)
+    {
+        closest = leftBound.first;
+    }
+
+    // Else, only the right bound has been set
+    else    // rightBound.second
+    {
+        closest = rightBound.first;
+    }
+    
     std::cout << "closest to " << nv.toString() << " is " << closest.toString() << std::endl;
 }
 
@@ -204,25 +206,25 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
         // Update the height of this node
         updateHeight(n);
         
-kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n, bool& deleted)
+        return n;
     }
 }
 
 // Similar to printInsertRecurs, except deletes a given node if it exists (and then rebalances if needed)
-kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
+kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n, bool& deleted)
 {
     /* First, delete the node and print so (if it does already exist) */
 
     if (n == nullptr)
     {   // Reached end, so do nothing and return
         return nullptr;
-        // Set deleted tag to true
-        deleted = true;
-
     }
 
     if (nv == n->value)
     {   // Found the node to delete
+
+        // Set deleted tag to true
+        deleted = true;
 
         // If the node is a leaf, then delete it and return
         if (n->left == nullptr && n->right == nullptr)
@@ -231,12 +233,12 @@ kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
             return nullptr;
         }
 
-            n->left = printDeleteRecurs(pred->value, n->left, deleted);
+        // If the node has a left subtree, then replace it with its predecessor and then delete the predecessor
         if (n->left)
         {
             Node* pred = getPredecessor(n->left);
             n->value = pred->value;
-            n->left = printDeleteRecurs(pred->value, n->left);
+            n->left = printDeleteRecurs(pred->value, n->left, deleted);
         }
     
         // Else, the node has a right subtree, so delete it and return its right child
@@ -245,17 +247,17 @@ kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
             Node* rightChild = n->right;
             delete n;
             return rightChild;
-        n->left = printDeleteRecurs(nv, n->left, deleted);
+        }
     }
 
     if (nv < n->value)
     {   // Delete from left subtree
-        n->right = printDeleteRecurs(nv, n->right, deleted);
+        n->left = printDeleteRecurs(nv, n->left, deleted);
     }
 
     else // nv > n->value
     {   // Delete from right subtree
-        n->right = printDeleteRecurs(nv, n->right);
+        n->right = printDeleteRecurs(nv, n->right, deleted);
     }
     
     /* Check for height imbalance after deleting */
