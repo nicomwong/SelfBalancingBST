@@ -24,7 +24,12 @@ void kAVLTree::printInsert(int whole, int frac)
 void kAVLTree::printDelete(int whole, int frac)
 {
     const NodeVal val(whole, frac);
-    this->root = printDeleteRecurs(val, this->root);
+    bool deleted = false;
+    this->root = printDeleteRecurs(val, this->root, deleted);
+    if (deleted)
+    {
+        std::cout << val.toString() << " deleted" << std::endl;
+}
 }
 
 // Prints "'whole.frac' found" if it is in the tree
@@ -199,7 +204,7 @@ kAVLTree::Node* kAVLTree::printInsertRecurs(NodeVal const& nv, Node* n)
         // Update the height of this node
         updateHeight(n);
         
-        return n;
+kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n, bool& deleted)
     }
 }
 
@@ -211,6 +216,9 @@ kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
     if (n == nullptr)
     {   // Reached end, so do nothing and return
         return nullptr;
+        // Set deleted tag to true
+        deleted = true;
+
     }
 
     if (nv == n->value)
@@ -223,7 +231,7 @@ kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
             return nullptr;
         }
 
-        // If the node has a left subtree, then replace it with its predecessor and then delete the predecessor
+            n->left = printDeleteRecurs(pred->value, n->left, deleted);
         if (n->left)
         {
             Node* pred = getPredecessor(n->left);
@@ -237,12 +245,12 @@ kAVLTree::Node* kAVLTree::printDeleteRecurs(NodeVal const& nv, Node* n)
             Node* rightChild = n->right;
             delete n;
             return rightChild;
-        }
+        n->left = printDeleteRecurs(nv, n->left, deleted);
     }
 
     if (nv < n->value)
     {   // Delete from left subtree
-        n->left = printDeleteRecurs(nv, n->left);
+        n->right = printDeleteRecurs(nv, n->right, deleted);
     }
 
     else // nv > n->value
