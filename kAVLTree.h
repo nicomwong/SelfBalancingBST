@@ -39,6 +39,8 @@ private:
 
         NodeVal operator-(NodeVal const& other) const;  // Overloaded subtraction operator
 
+        NodeVal abs() const; // Returns the absolute value of this NodeVal
+
         std::string toString() const; // Returns a string of 'whole.fract'
         
         int whole, fract;

@@ -386,7 +386,7 @@ bool kAVLTree::isImbalanced(Node* n) const
     int rightHeight = n->right ? n->right->height : -1;
     
     // Return true iff the height difference is greater than k
-    return abs(leftHeight - rightHeight) > k;
+    return std::abs(leftHeight - rightHeight) > k;
 }
 
 // Recursive helper for printInOrder
@@ -463,6 +463,11 @@ bool kAVLTree::NodeVal::operator>(NodeVal const& other) const
 kAVLTree::NodeVal kAVLTree::NodeVal::operator-(NodeVal const& other) const
 {
     return NodeVal(this->whole - other.whole, this->fract - other.fract);
+}
+
+kAVLTree::NodeVal kAVLTree::NodeVal::abs() const
+{
+    return NodeVal(std::abs(this->whole), std::abs(this->fract) );
 }
 
 // Returns a string of 'whole.fract'
